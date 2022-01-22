@@ -1,0 +1,20 @@
+---
+- hosts: all
+  vars_prompt:
+    - name: username
+      prompt: "Desired username"
+      private: no
+
+  tasks:
+    - name: Add a docker group
+      ansible.builtin.group:
+        name: docker
+
+    - name: Add a group for the specified username
+      ansible.builtin.group:
+        name: '{{ username }}'
+
+    - name: Add a user of the specified username {{ username }} in the groups {{ username }},sudo,docker
+      ansible.builtin.user:
+        name: '{{ username }}'
+        groups: '{{ username }},sudo,docker'
