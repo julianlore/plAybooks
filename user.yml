@@ -1,11 +1,17 @@
 ---
 - hosts: all
-  vars_prompt:
-    - name: username
-      prompt: "Desired username"
-      private: no
-
+  vars:
+    dotfilesDst: /home/{{ username }}/my-dotfiles
   tasks:
+    - name: Fail if variable username is not specified
+      fail:
+        msg: "You must specify the username variable (ex. with -e username=<name>)."
+      when: username is not defined
+
+    - name: Install zsh
+      apt:
+        name: zsh
+
     - name: Add a docker group
       ansible.builtin.group:
         name: docker
@@ -14,7 +20,49 @@
       ansible.builtin.group:
         name: '{{ username }}'
 
-    - name: Add a user of the specified username {{ username }} in the groups {{ username }},sudo,docker
+    - name: Add a user of the specified username {{ username }} in the groups {{ username }},sudo,docker with zsh as default shell.
       ansible.builtin.user:
         name: '{{ username }}'
         groups: '{{ username }},sudo,docker'
+        shell: /usr/bin/zsh
+
+    # block for tasks to do as newly created user for file permissions
+    - block:
+      - name: Clone dotfiles repo
+        ansible.builtin.git:
+          repo: 'https://github.com/julianlore/my-dotfiles.git'
+          dest: '{{ dotfilesDst }}'
+
+      - name: Find dot files in root of dotfiles repo, including directories
+        find:
+          paths: '{{ dotfilesDst }}'
+          hidden: yes
+          excludes: .config,.git,.gitignore,.gitmodules,*.md,*.txt,*.sh,*~*,i3wm-themer,Misc
+          file_type: any
+          recurse: no
+        register: dotfiles
+
+      - name: Make symlinks to dotfiles found in root
+        ansible.builtin.file:
+          state: link
+          src: '{{ item.path }}'
+          path: /home/{{ username }}/{{ item.path | basename }}
+        loop: '{{ dotfiles.files }}'
+
+      - name: Find dot files in .config of dotfiles repo, including directories
+        find:
+          paths: '{{ dotfilesDst }}/.config'
+          hidden: yes
+          file_type: any
+          recurse: no
+        register: dotfiles
+
+      - name: Make symlinks to dotfiles found in .config
+        ansible.builtin.file:
+          state: link
+          src: '{{ item.path }}'
+          path: /home/{{ username }}/.config/{{ item.path | basename }}
+        loop: '{{ dotfiles.files }}'
+
+      become: yes
+      become_user: '{{ username }}'
