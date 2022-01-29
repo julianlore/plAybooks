@@ -1,0 +1,7 @@
+---
+- hosts: all
+  tasks:
+    - name: Install tmux, docker, docker-compose, ufw
+      apt:
+        name: tmux,docker,docker-compose,ufw
+        update_cache: yes
