@@ -49,6 +49,11 @@
           path: /home/{{ username }}/{{ item.path | basename }}
         loop: '{{ dotfiles.files }}'
 
+      - name: Create .config directory in home directory
+        ansible.builtin.file:
+          state: directory
+          path: /home/{{ username }}/.config
+
       - name: Find dot files in .config of dotfiles repo, including directories
         find:
           paths: '{{ dotfilesDst }}/.config'
