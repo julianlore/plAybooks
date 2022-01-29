@@ -69,5 +69,17 @@
           path: /home/{{ username }}/.config/{{ item.path | basename }}
         loop: '{{ dotfiles.files }}'
 
+      - name: Create .ssh dir
+        ansible.builtin.file:
+          state: directory
+          path: /home/{{ username }}/.ssh
+
+      - name: Create authorized_keys empty file
+        ansible.builtin.file:
+          state: touch
+          path: /home/{{ username }}/.ssh/authorized_keys
+          modification_time: preserve
+          access_time: preserve
+
       become: yes
       become_user: '{{ username }}'
