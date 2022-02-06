@@ -11,6 +11,7 @@
         borgbackup
         net-tools
         nmap
+        traceroute
       apt:
         name: |
           tmux
@@ -21,4 +22,5 @@
           ,borgbackup
           ,net-tools
           ,nmap
+          ,traceroute
         update_cache: yes
