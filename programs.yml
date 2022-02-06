@@ -9,6 +9,8 @@
         ufw
         nnn
         borgbackup
+        net-tools
+        nmap
       apt:
         name: |
           tmux
@@ -17,4 +19,6 @@
           ,ufw
           ,nnn
           ,borgbackup
+          ,net-tools
+          ,nmap
         update_cache: yes
