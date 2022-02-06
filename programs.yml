@@ -1,7 +1,20 @@
 ---
 - hosts: all
   tasks:
-    - name: Install tmux, docker, docker-compose, ufw, nnn, borgbackup
+    - name: |
+        Install
+        tmux
+        docker
+        docker-compose
+        ufw
+        nnn
+        borgbackup
       apt:
-        name: tmux,docker,docker-compose,ufw,nnn,borgbackup
+        name: |
+          tmux
+          ,docker
+          ,docker-compose
+          ,ufw
+          ,nnn
+          ,borgbackup
         update_cache: yes
