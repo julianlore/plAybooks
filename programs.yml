@@ -12,6 +12,7 @@
         net-tools
         nmap
         traceroute
+        sshfs
       apt:
         name: |
           tmux
@@ -23,4 +24,5 @@
           ,net-tools
           ,nmap
           ,traceroute
+          ,sshfs
         update_cache: yes
