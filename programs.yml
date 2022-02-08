@@ -13,6 +13,7 @@
         nmap
         traceroute
         sshfs
+        vnstat
       apt:
         name: |
           tmux
@@ -25,4 +26,5 @@
           ,nmap
           ,traceroute
           ,sshfs
+          ,vnstat
         update_cache: yes
