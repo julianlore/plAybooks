@@ -15,6 +15,7 @@
         sshfs
         vnstat
         vim
+        curl
       apt:
         name: |
           tmux
@@ -29,4 +30,5 @@
           ,sshfs
           ,vnstat
           ,vim
+          ,curl
         update_cache: yes
