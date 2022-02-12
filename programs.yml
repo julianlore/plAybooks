@@ -14,6 +14,7 @@
         traceroute
         sshfs
         vnstat
+        vim
       apt:
         name: |
           tmux
@@ -27,4 +28,5 @@
           ,traceroute
           ,sshfs
           ,vnstat
+          ,vim
         update_cache: yes
