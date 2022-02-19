@@ -9,6 +9,7 @@
         ufw
         nnn
         borgbackup
+        borgmatic
         net-tools
         nmap
         traceroute
@@ -24,6 +25,7 @@
           ,ufw
           ,nnn
           ,borgbackup
+          ,borgmatic
           ,net-tools
           ,nmap
           ,traceroute
