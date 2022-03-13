@@ -1,0 +1,6 @@
+---
+- hosts: all
+  tasks:
+    - name: Set timezone to America/Montreal
+      timezone:
+        name: America/Montreal
