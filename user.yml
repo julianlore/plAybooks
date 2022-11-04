@@ -1,7 +1,5 @@
 ---
 - hosts: all
-  vars:
-    dotfilesDst: /home/{{ username }}/my-dotfiles
   tasks:
     - name: Fail if variable username is not specified
       fail:
@@ -26,60 +24,4 @@
         groups: '{{ username }},sudo,docker'
         shell: /usr/bin/zsh
 
-    # block for tasks to do as newly created user for file permissions
-    - block:
-      - name: Clone dotfiles repo
-        ansible.builtin.git:
-          repo: 'https://github.com/julianlore/my-dotfiles.git'
-          dest: '{{ dotfilesDst }}'
-
-      - name: Find dot files in root of dotfiles repo, including directories
-        find:
-          paths: '{{ dotfilesDst }}'
-          hidden: yes
-          excludes: .config,.git,.gitignore,.gitmodules,*.md,*.txt,*.sh,*~*,i3wm-themer,Misc
-          file_type: any
-          recurse: no
-        register: dotfiles
-
-      - name: Make symlinks to dotfiles found in root
-        ansible.builtin.file:
-          state: link
-          src: '{{ item.path }}'
-          path: /home/{{ username }}/{{ item.path | basename }}
-        loop: '{{ dotfiles.files }}'
-
-      - name: Create .config directory in home directory
-        ansible.builtin.file:
-          state: directory
-          path: /home/{{ username }}/.config
-
-      - name: Find dot files in .config of dotfiles repo, including directories
-        find:
-          paths: '{{ dotfilesDst }}/.config'
-          hidden: yes
-          file_type: any
-          recurse: no
-        register: dotfiles
-
-      - name: Make symlinks to dotfiles found in .config
-        ansible.builtin.file:
-          state: link
-          src: '{{ item.path }}'
-          path: /home/{{ username }}/.config/{{ item.path | basename }}
-        loop: '{{ dotfiles.files }}'
-
-      - name: Create .ssh dir
-        ansible.builtin.file:
-          state: directory
-          path: /home/{{ username }}/.ssh
-
-      - name: Create authorized_keys empty file
-        ansible.builtin.file:
-          state: touch
-          path: /home/{{ username }}/.ssh/authorized_keys
-          modification_time: preserve
-          access_time: preserve
-
-      become: yes
-      become_user: '{{ username }}'
+    - import_playbook: user_dotfiles.yml
